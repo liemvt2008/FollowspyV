@@ -43,10 +43,14 @@ if _GA_ID:
 # ---------------------------------------------------------------------------
 
 _CONFIG_PATH = Path(__file__).parent / "config_auth.yaml"
-with open(_CONFIG_PATH) as f:
-    auth_config = yaml.load(f, Loader=SafeLoader)
+try:
+    with open(_CONFIG_PATH) as f:
+        auth_config = yaml.load(f, Loader=SafeLoader)
+except FileNotFoundError:
+    # On Streamlit Cloud: store the full YAML content in Secrets as CONFIG_AUTH_YAML
+    auth_config = yaml.safe_load(st.secrets["CONFIG_AUTH_YAML"])
 
-cookie_key = os.getenv("COOKIE_SECRET", auth_config["cookie"]["key"])
+cookie_key = os.getenv("COOKIE_SECRET") or st.secrets.get("COOKIE_SECRET") or auth_config["cookie"]["key"]
 
 authenticator = stauth.Authenticate(
     auth_config["credentials"],
