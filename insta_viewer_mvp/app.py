@@ -65,7 +65,13 @@ try:
 except FileNotFoundError:
     auth_config = yaml.safe_load(st.secrets["CONFIG_AUTH_YAML"])
 
-cookie_key = os.getenv("COOKIE_SECRET") or st.secrets.get("COOKIE_SECRET") or auth_config["cookie"]["key"]
+_cookie_secret = os.getenv("COOKIE_SECRET")
+if not _cookie_secret:
+    try:
+        _cookie_secret = st.secrets.get("COOKIE_SECRET")
+    except Exception:
+        pass
+cookie_key = _cookie_secret or auth_config["cookie"]["key"]
 
 authenticator = stauth.Authenticate(
     auth_config["credentials"],
