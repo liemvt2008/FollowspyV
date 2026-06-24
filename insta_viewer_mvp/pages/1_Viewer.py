@@ -1,3 +1,4 @@
+import hashlib
 import uuid
 
 import streamlit as st
@@ -34,14 +35,33 @@ def get_stories(username: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# User identity (guest UUID, persists within session)
+# User identity — hashed IP (falls back to session UUID if unavailable)
 # ---------------------------------------------------------------------------
 
-rate_limiter = RateLimiter()
+def _get_user_key() -> str:
+    """Return a privacy-safe user key derived from the client IP.
 
-if "guest_id" not in st.session_state:
-    st.session_state["guest_id"] = f"guest_{uuid.uuid4().hex}"
-user_key = st.session_state["guest_id"]
+    The IP is hashed with SHA-256 so raw addresses are never stored.
+    Falls back to a session UUID when headers are unavailable (local dev).
+    """
+    try:
+        headers = st.context.headers
+        # X-Forwarded-For: client, proxy1, proxy2 — take the first value
+        forwarded = headers.get("X-Forwarded-For", "").split(",")[0].strip()
+        ip = forwarded or headers.get("X-Real-Ip", "").strip()
+        if ip:
+            return "ip_" + hashlib.sha256(ip.encode()).hexdigest()[:20]
+    except Exception:
+        pass
+
+    # Fallback: session-scoped UUID for local / restricted environments
+    if "guest_id" not in st.session_state:
+        st.session_state["guest_id"] = f"guest_{uuid.uuid4().hex}"
+    return st.session_state["guest_id"]
+
+
+rate_limiter = RateLimiter()
+user_key = _get_user_key()
 
 # ---------------------------------------------------------------------------
 # Hero section
