@@ -1,6 +1,0 @@
-streamlit
-requests
-python-dotenv
-streamlit-authenticator>=0.4.2
-PyYAML
-bcrypt
