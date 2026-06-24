@@ -7,10 +7,21 @@ from services.instagram import InstagramService
 from utils.media_handler import download_media_bytes
 from utils.rate_limiter import RateLimiter
 from utils.logger_helper import get_logger
+from utils.i18n import t
 
 load_dotenv()
 
 logger = get_logger()
+
+
+# ---------------------------------------------------------------------------
+# Footer helper
+# ---------------------------------------------------------------------------
+
+def _render_footer():
+    st.divider()
+    st.caption(t("footer"))
+
 
 # ---------------------------------------------------------------------------
 # Cached story fetcher
@@ -23,25 +34,13 @@ def get_stories(username: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# User identity & VIP check (auth state set by app.py router)
+# User identity & VIP check
 # ---------------------------------------------------------------------------
-
-# ---------------------------------------------------------------------------
-# Footer helper — defined early so early-exit paths can call it
-# ---------------------------------------------------------------------------
-
-def _render_footer():
-    st.divider()
-    st.caption(
-        "This application is an independent public media proxy tool. "
-        "Please read our [Terms of Service](2_Terms) and [Privacy Policy](3_Privacy)."
-    )
-
 
 rate_limiter = RateLimiter()
 
 _auth_status = st.session_state.get("authentication_status")
-_username = st.session_state.get("username")
+_username    = st.session_state.get("username")
 _auth_config = st.session_state.get("_auth_config", {})
 
 if _auth_status and _username:
@@ -63,28 +62,28 @@ else:
 # Hero section
 # ---------------------------------------------------------------------------
 
-st.markdown("# 🕵️ IG Story Viewer")
-st.markdown("**View Instagram stories anonymously — no login, no trace.**")
-st.info("Enter a public Instagram username below and click **View Stories Now**.")
+st.markdown(t("hero_title"))
+st.markdown(t("hero_subtitle"))
+st.info(t("hero_info"))
 
 if is_vip:
-    st.success(f"⭐ VIP access — unlimited searches, logged in as **{_username}**.")
+    st.success(f"{t('vip_access')} **{_username}**.")
 else:
     remaining = rate_limiter.remaining(user_key)
-    st.markdown(f"⭐ Free searches remaining today: **{remaining} / 5**")
+    st.markdown(f"{t('quota_remaining')} **{remaining} {t('quota_of')}**")
 
 # ---------------------------------------------------------------------------
 # Search form
 # ---------------------------------------------------------------------------
 
 username_input = st.text_input(
-    label="Instagram Username",
-    placeholder="e.g. cristiano_ronaldo",
+    label=t("input_label"),
+    placeholder=t("input_placeholder"),
     max_chars=30,
     key="username_input",
 )
 
-search_clicked = st.button("View Stories Now", type="primary", use_container_width=True)
+search_clicked = st.button(t("search_button"), type="primary", use_container_width=True)
 
 # ---------------------------------------------------------------------------
 # Search logic
@@ -94,20 +93,17 @@ if search_clicked:
     username = username_input.strip().lower()
 
     if not username:
-        st.warning("Please enter an Instagram username.")
+        st.warning(t("empty_input"))
 
     elif not is_vip and not rate_limiter.is_allowed(user_key):
         logger.warning("Rate limit reached for user_key=%s", user_key)
-        st.error(
-            "🚫 Daily Limit Reached! You have exhausted your 5 free daily anonymous "
-            "views. Please return tomorrow or sign in as a VIP user."
-        )
+        st.error(t("rate_limit_error"))
 
     else:
         counted_usernames: set = st.session_state.setdefault("counted_usernames", set())
         is_cache_hit = username in counted_usernames
 
-        with st.spinner("Fetching secure media stream..."):
+        with st.spinner(t("spinner_fetch")):
             result = get_stories(username)
 
         if result["status"] == "error":
@@ -133,7 +129,7 @@ if search_clicked:
 # Render results
 # ---------------------------------------------------------------------------
 
-result = st.session_state.get("result")
+result   = st.session_state.get("result")
 username = st.session_state.get("searched_username", "")
 
 if result is None:
@@ -143,10 +139,7 @@ if result is None:
 if result["status"] == "error":
     msg = result["message"].lower()
     if any(k in msg for k in ("429", "rate limit", "quota", "too many")):
-        st.warning(
-            "⚠️ Server Capacity Peak Reached. Our team is adjusting throughput, "
-            "please try again shortly."
-        )
+        st.warning(t("capacity_error"))
     else:
         st.error(result["message"])
     _render_footer()
@@ -155,14 +148,13 @@ if result["status"] == "error":
 stories = result.get("stories", [])
 
 if not stories:
-    st.info("This user currently has no stories published in the last 24 hours.")
+    st.info(t("no_stories"))
     _render_footer()
     st.stop()
 
-st.success(
-    f"Found **{len(stories)}** stor{'y' if len(stories) == 1 else 'ies'} "
-    f"for **@{username}**."
-)
+n = len(stories)
+label = t("found_stories_one") if n == 1 else t("found_stories_many", n=n)
+st.success(f"{label} **@{username}**.")
 
 st.divider()
 
@@ -173,9 +165,9 @@ st.divider()
 cols = st.columns(3)
 
 for idx, story in enumerate(stories):
-    col = cols[idx % 3]
-    story_id = story.get("id", str(idx))
-    story_url = story["url"]
+    col        = cols[idx % 3]
+    story_id   = story.get("id", str(idx))
+    story_url  = story["url"]
     story_type = story["type"]
 
     with col:
@@ -183,12 +175,12 @@ for idx, story in enumerate(stories):
             try:
                 st.video(story_url)
             except Exception:
-                st.warning("Video unavailable.")
-            with st.spinner("Buffering…"):
+                st.warning(t("video_unavailable"))
+            with st.spinner(t("spinner_buffer")):
                 try:
                     media_bytes = download_media_bytes(story_url)
                     st.download_button(
-                        label="📥 Download Video",
+                        label=t("dl_video"),
                         data=media_bytes,
                         file_name=f"{username}_story_{story_id}.mp4",
                         mime="video/mp4",
@@ -197,17 +189,17 @@ for idx, story in enumerate(stories):
                     )
                 except Exception as exc:
                     logger.warning("Download failed %s story %s: %s", username, story_id, exc)
-                    st.warning("Download unavailable.")
+                    st.warning(t("download_unavailable"))
         else:
             try:
                 st.image(story_url, use_container_width=True)
             except Exception:
-                st.warning("Image unavailable.")
-            with st.spinner("Buffering…"):
+                st.warning(t("image_unavailable"))
+            with st.spinner(t("spinner_buffer")):
                 try:
                     media_bytes = download_media_bytes(story_url)
                     st.download_button(
-                        label="📥 Download Image",
+                        label=t("dl_image"),
                         data=media_bytes,
                         file_name=f"{username}_story_{story_id}.jpg",
                         mime="image/jpeg",
@@ -216,6 +208,6 @@ for idx, story in enumerate(stories):
                     )
                 except Exception as exc:
                     logger.warning("Download failed %s story %s: %s", username, story_id, exc)
-                    st.warning("Download unavailable.")
+                    st.warning(t("download_unavailable"))
 
 _render_footer()

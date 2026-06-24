@@ -8,6 +8,8 @@ from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
 from dotenv import load_dotenv
 
+from utils.i18n import t
+
 load_dotenv()
 
 # ---------------------------------------------------------------------------
@@ -21,7 +23,20 @@ st.set_page_config(
 )
 
 # ---------------------------------------------------------------------------
-# Analytics injection (zero layout shift)
+# Language switcher — top right
+# ---------------------------------------------------------------------------
+
+if "lang" not in st.session_state:
+    st.session_state["lang"] = "en"
+
+_, lang_col = st.columns([6, 1])
+with lang_col:
+    if st.button(t("lang_toggle"), use_container_width=True):
+        st.session_state["lang"] = "vi" if st.session_state["lang"] == "en" else "en"
+        st.rerun()
+
+# ---------------------------------------------------------------------------
+# Analytics — Google Analytics (optional)
 # ---------------------------------------------------------------------------
 
 _GA_ID = os.getenv("GA_MEASUREMENT_ID", "")
@@ -48,7 +63,6 @@ try:
     with open(_CONFIG_PATH) as f:
         auth_config = yaml.load(f, Loader=SafeLoader)
 except FileNotFoundError:
-    # On Streamlit Cloud: store the full YAML content in Secrets as CONFIG_AUTH_YAML
     auth_config = yaml.safe_load(st.secrets["CONFIG_AUTH_YAML"])
 
 cookie_key = os.getenv("COOKIE_SECRET") or st.secrets.get("COOKIE_SECRET") or auth_config["cookie"]["key"]
@@ -60,12 +74,11 @@ authenticator = stauth.Authenticate(
     auth_config["cookie"]["expiry_days"],
 )
 
-# Store authenticator in session so pages can access logout
 st.session_state["_authenticator"] = authenticator
 st.session_state["_auth_config"] = auth_config
 
 with st.sidebar:
-    st.markdown("### 🔑 VIP Login")
+    st.markdown(t("sidebar_login"))
     authenticator.login(location="sidebar")
     if st.session_state.get("authentication_status"):
         authenticator.logout(location="sidebar")
@@ -76,7 +89,7 @@ with st.sidebar:
 
 pg = st.navigation(
     [
-        st.Page("pages/1_Viewer.py",  title="Story Viewer",   icon="🕵️", default=True),
+        st.Page("pages/1_Viewer.py",  title="Story Viewer",    icon="🕵️", default=True),
         st.Page("pages/2_Terms.py",   title="Terms of Service", icon="📜"),
         st.Page("pages/3_Privacy.py", title="Privacy Policy",  icon="🔒"),
     ]
@@ -84,8 +97,7 @@ pg = st.navigation(
 pg.run()
 
 # ---------------------------------------------------------------------------
-# Umami Analytics — injected in router so it fires on every page
-# height=0/width=0 keeps it fully invisible with no layout impact
+# Umami Analytics — invisible, fires on every page
 # ---------------------------------------------------------------------------
 
 _UMAMI_SCRIPT = """
