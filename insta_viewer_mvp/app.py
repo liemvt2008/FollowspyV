@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 
 import streamlit as st
+import streamlit.components.v1 as components
 import yaml
 from yaml.loader import SafeLoader
 import streamlit_authenticator as stauth
@@ -81,3 +82,14 @@ pg = st.navigation(
     ]
 )
 pg.run()
+
+# ---------------------------------------------------------------------------
+# Umami Analytics — injected in router so it fires on every page
+# height=0/width=0 keeps it fully invisible with no layout impact
+# ---------------------------------------------------------------------------
+
+_UMAMI_SCRIPT = """
+<script defer src="https://cloud.umami.is/script.js"
+        data-website-id="5050b923-63be-43bc-b746-9d87a87bedf5"></script>
+"""
+components.html(_UMAMI_SCRIPT, height=0, width=0)
