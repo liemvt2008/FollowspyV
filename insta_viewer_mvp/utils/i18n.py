@@ -3,16 +3,27 @@ import streamlit as st
 STRINGS = {
     "en": {
         # Page meta
-        "page_title": "IG Story Viewer — Anonymous & Free",
+        "page_title": "Story Viewer — Anonymous & Free",
         "lang_toggle": "🇻🇳 Tiếng Việt",
 
         # Sidebar
         "sidebar_login": "### 🔑 VIP Login",
 
         # Hero
-        "hero_title": "# 🕵️ IG Story Viewer",
-        "hero_subtitle": "**View Instagram stories anonymously — no login, no trace.**",
-        "hero_info": "Enter a public Instagram username below and click **View Stories Now**.",
+        "hero_title": "# 🕵️ Anonymous Story Viewer",
+        "hero_subtitle": "**View Instagram & TikTok stories anonymously — no login, no trace.**",
+        "hero_info": "Choose a platform below, enter a public username, and view stories instantly.",
+
+        # Platform tabs
+        "tab_instagram": "📸 Instagram",
+        "tab_tiktok": "🎵 TikTok",
+
+        # TikTok search form
+        "tt_input_label": "TikTok Username",
+        "tt_input_placeholder": "e.g. _jessica.anh_",
+        "tt_search_button": "View TikTok Stories Now",
+        "tt_empty_input": "Please enter a TikTok username.",
+        "tt_no_stories": "This TikTok user has no active stories (stories expire every 24 h).",
 
         # Quota
         "vip_access": "⭐ VIP access — unlimited searches, logged in as",
@@ -106,16 +117,27 @@ It expires after **1 day** and is not used for advertising or cross-site trackin
 
     "vi": {
         # Page meta
-        "page_title": "Xem Story IG — Ẩn Danh & Miễn Phí",
+        "page_title": "Xem Story Ẩn Danh & Miễn Phí",
         "lang_toggle": "🇬🇧 English",
 
         # Sidebar
         "sidebar_login": "### 🔑 Đăng nhập VIP",
 
         # Hero
-        "hero_title": "# 🕵️ Xem Story Instagram",
-        "hero_subtitle": "**Xem story Instagram ẩn danh — không cần đăng nhập, không để lại dấu vết.**",
-        "hero_info": "Nhập tên người dùng Instagram công khai bên dưới và nhấn **Xem Story Ngay**.",
+        "hero_title": "# 🕵️ Xem Story Ẩn Danh",
+        "hero_subtitle": "**Xem story Instagram & TikTok ẩn danh — không cần đăng nhập, không để lại dấu vết.**",
+        "hero_info": "Chọn nền tảng bên dưới, nhập tên người dùng công khai và xem story ngay.",
+
+        # Platform tabs
+        "tab_instagram": "📸 Instagram",
+        "tab_tiktok": "🎵 TikTok",
+
+        # TikTok search form
+        "tt_input_label": "Tên người dùng TikTok",
+        "tt_input_placeholder": "ví dụ: _jessica.anh_",
+        "tt_search_button": "Xem Story TikTok Ngay",
+        "tt_empty_input": "Vui lòng nhập tên người dùng TikTok.",
+        "tt_no_stories": "Người dùng TikTok này chưa đăng story (story hết hạn sau 24 giờ).",
 
         # Quota
         "vip_access": "⭐ Truy cập VIP — không giới hạn, đăng nhập với tên",

@@ -13,7 +13,7 @@ load_dotenv()
 # ---------------------------------------------------------------------------
 
 st.set_page_config(
-    page_title="IG Story Viewer — Anonymous & Free",
+    page_title="Xem Story Ẩn Danh & Miễn Phí",
     page_icon="🕵️",
     layout="centered",
 )
@@ -23,7 +23,7 @@ st.set_page_config(
 # ---------------------------------------------------------------------------
 
 if "lang" not in st.session_state:
-    st.session_state["lang"] = "en"
+    st.session_state["lang"] = "vi"
 
 _, lang_col = st.columns([6, 1])
 with lang_col:
@@ -56,9 +56,9 @@ if _GA_ID:
 
 pg = st.navigation(
     [
-        st.Page("pages/1_Viewer.py",  title="Story Viewer",    icon="🕵️", default=True),
-        st.Page("pages/2_Terms.py",   title="Terms of Service", icon="📜"),
-        st.Page("pages/3_Privacy.py", title="Privacy Policy",  icon="🔒"),
+        st.Page("pages/1_Viewer.py",  title="Xem Story",       icon="🕵️", default=True),
+        st.Page("pages/2_Terms.py",   title="Điều Khoản",      icon="📜"),
+        st.Page("pages/3_Privacy.py", title="Bảo Mật",         icon="🔒"),
     ]
 )
 pg.run()
