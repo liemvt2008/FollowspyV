@@ -1,0 +1,16 @@
+# Secrets — never commit these
+.env
+config_auth.yaml
+
+# Runtime data
+rate_limit.db
+app.log
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/Ho
+
+# Streamlit
+.streamlit/secrets.toml

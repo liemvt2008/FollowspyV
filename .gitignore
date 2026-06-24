@@ -1,0 +1,20 @@
+# Secrets
+insta_viewer_mvp/.env
+insta_viewer_mvp/config_auth.yaml
+
+# Runtime data
+insta_viewer_mvp/rate_limit.db
+insta_viewer_mvp/app.log
+insta_viewer_mvp/*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+
+# Streamlit
+insta_viewer_mvp/.streamlit/secrets.toml
+
+# IntelliJ
+.idea/
+*.iml

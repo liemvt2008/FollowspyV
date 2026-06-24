@@ -1,0 +1,12 @@
+credentials:
+  usernames:
+    your_admin_username:
+      email: admin@yourdomain.com
+      name: Admin
+      password: "$2b$12$REPLACE_WITH_BCRYPT_HASH"  # generate: python -c "import bcrypt; print(bcrypt.hashpw(b'yourpassword', bcrypt.gensalt(12)).decode())"
+      role: vip
+
+cookie:
+  name: followspyv_auth
+  key: REPLACE_WITH_STRONG_RANDOM_SECRET   # set via COOKIE_SECRET env var in production
+  expiry_days: 1
