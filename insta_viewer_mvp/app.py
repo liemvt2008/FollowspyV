@@ -1,11 +1,7 @@
 import os
-from pathlib import Path
 
 import streamlit as st
 import streamlit.components.v1 as components
-import yaml
-from yaml.loader import SafeLoader
-import streamlit_authenticator as stauth
 from dotenv import load_dotenv
 
 from utils.i18n import t
@@ -53,41 +49,6 @@ if _GA_ID:
         """,
         unsafe_allow_html=True,
     )
-
-# ---------------------------------------------------------------------------
-# Shared auth setup (state persists across all pages via session_state)
-# ---------------------------------------------------------------------------
-
-_CONFIG_PATH = Path(__file__).parent / "config_auth.yaml"
-try:
-    with open(_CONFIG_PATH) as f:
-        auth_config = yaml.load(f, Loader=SafeLoader)
-except FileNotFoundError:
-    auth_config = yaml.safe_load(st.secrets["CONFIG_AUTH_YAML"])
-
-_cookie_secret = os.getenv("COOKIE_SECRET")
-if not _cookie_secret:
-    try:
-        _cookie_secret = st.secrets.get("COOKIE_SECRET")
-    except Exception:
-        pass
-cookie_key = _cookie_secret or auth_config["cookie"]["key"]
-
-authenticator = stauth.Authenticate(
-    auth_config["credentials"],
-    auth_config["cookie"]["name"],
-    cookie_key,
-    auth_config["cookie"]["expiry_days"],
-)
-
-st.session_state["_authenticator"] = authenticator
-st.session_state["_auth_config"] = auth_config
-
-with st.sidebar:
-    st.markdown(t("sidebar_login"))
-    authenticator.login(location="sidebar")
-    if st.session_state.get("authentication_status"):
-        authenticator.logout(location="sidebar")
 
 # ---------------------------------------------------------------------------
 # Multi-page navigation

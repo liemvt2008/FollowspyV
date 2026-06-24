@@ -34,29 +34,14 @@ def get_stories(username: str) -> dict:
 
 
 # ---------------------------------------------------------------------------
-# User identity & VIP check
+# User identity (guest UUID, persists within session)
 # ---------------------------------------------------------------------------
 
 rate_limiter = RateLimiter()
 
-_auth_status = st.session_state.get("authentication_status")
-_username    = st.session_state.get("username")
-_auth_config = st.session_state.get("_auth_config", {})
-
-if _auth_status and _username:
-    user_key = _username
-    is_vip = (
-        _auth_config.get("credentials", {})
-        .get("usernames", {})
-        .get(_username, {})
-        .get("role") == "vip"
-    )
-    logger.info("Authenticated session for VIP user: %s", _username)
-else:
-    if "guest_id" not in st.session_state:
-        st.session_state["guest_id"] = f"guest_{uuid.uuid4().hex}"
-    user_key = st.session_state["guest_id"]
-    is_vip = False
+if "guest_id" not in st.session_state:
+    st.session_state["guest_id"] = f"guest_{uuid.uuid4().hex}"
+user_key = st.session_state["guest_id"]
 
 # ---------------------------------------------------------------------------
 # Hero section
@@ -66,11 +51,8 @@ st.markdown(t("hero_title"))
 st.markdown(t("hero_subtitle"))
 st.info(t("hero_info"))
 
-if is_vip:
-    st.success(f"{t('vip_access')} **{_username}**.")
-else:
-    remaining = rate_limiter.remaining(user_key)
-    st.markdown(f"{t('quota_remaining')} **{remaining} {t('quota_of')}**")
+remaining = rate_limiter.remaining(user_key)
+st.markdown(f"{t('quota_remaining')} **{remaining} {t('quota_of')}**")
 
 # ---------------------------------------------------------------------------
 # Search form
@@ -95,7 +77,7 @@ if search_clicked:
     if not username:
         st.warning(t("empty_input"))
 
-    elif not is_vip and not rate_limiter.is_allowed(user_key):
+    elif not rate_limiter.is_allowed(user_key):
         logger.warning("Rate limit reached for user_key=%s", user_key)
         st.error(t("rate_limit_error"))
 
@@ -111,7 +93,7 @@ if search_clicked:
                 "API error for user_key=%s username=%s — %s",
                 user_key, username, result["message"],
             )
-        elif not is_cache_hit and not is_vip:
+        elif not is_cache_hit:
             rate_limiter.increment_counter(user_key)
             counted_usernames.add(username)
             logger.info(
@@ -121,9 +103,7 @@ if search_clicked:
 
         st.session_state["result"] = result
         st.session_state["searched_username"] = username
-
-        if not is_vip:
-            st.rerun()
+        st.rerun()
 
 # ---------------------------------------------------------------------------
 # Render results
