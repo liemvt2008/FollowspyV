@@ -1,0 +1,22 @@
+credentials:
+  usernames:
+    admin:
+      email: admin@followspyv.com
+      name: Admin
+      password: "$2b$12$rCrgH8Cyp56ltLY35bd.5O91UwfF2TRP5ahBo4z1BlBlnpV/o.zQO"  # admin123
+      role: vip
+    beta_tester:
+      email: beta@followspyv.com
+      name: Beta Tester
+      password: "$2b$12$sWF/sYY8Ubn1GqNrlV.DGutGkDsiDOwPF9vVEJrgfYJAE4hPpm29y"  # beta2024
+      role: vip
+    vip_user:
+      email: vip@followspyv.com
+      name: VIP User
+      password: "$2b$12$Tyvj58aN/3lYrOSpP5sUwOSTQBLFXNHE77QERtDqUpE0G1weNXC6a"  # vip2024
+      role: vip
+
+cookie:
+  name: followspyv_auth
+  key: followspyv_secret_key_change_in_prod
+  expiry_days: 1
