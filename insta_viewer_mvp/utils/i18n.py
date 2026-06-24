@@ -15,8 +15,8 @@ STRINGS = {
         "hero_info": "Choose a platform below, enter a public username, and view stories instantly.",
 
         # Platform tabs
-        "tab_instagram": "📸 Instagram",
-        "tab_tiktok": "🎵 TikTok",
+        "tab_instagram": "Instagram",
+        "tab_tiktok": "TikTok",
 
         # TikTok search form
         "tt_input_label": "TikTok Username",
@@ -69,16 +69,17 @@ STRINGS = {
         "terms_updated": "Last updated: June 2026",
         "terms_body": """
 ## 1. Nature of the Service
-**IG Story Viewer** is an independent educational utility acting as a transparent proxy
-for publicly accessible Instagram story media. The Service does **not** store, reproduce,
-redistribute, or monetise any third-party copyrighted content.
+**Anonymous Story Viewer** is an independent educational utility acting as a transparent
+proxy for publicly accessible Instagram and TikTok story media. The Service does **not**
+store, reproduce, redistribute, or monetise any third-party copyrighted content.
 
-## 2. No Affiliation with Meta or Instagram
+## 2. No Affiliation
 This tool is entirely unaffiliated with Meta Platforms, Inc., Instagram, ByteDance, TikTok,
-or any of their subsidiaries.
+or any of their subsidiaries. All trademarks belong to their respective owners.
 
 ## 3. Acceptable Use
-You agree to use the Service solely to view **public** Instagram accounts. You must **not**:
+You agree to use the Service solely to view **public** Instagram and TikTok accounts.
+You must **not**:
 - Attempt to access private, restricted, or minors' accounts.
 - Use the Service for commercial surveillance, stalking, or harassment.
 - Circumvent the rate-limiting system using bots or scrapers.
@@ -98,20 +99,22 @@ We collect only the minimum data necessary to operate the Service safely.
 ## 2. What We Collect
 | Data | Purpose | Retention |
 |---|---|---|
-| Anonymous session UUID | Rate-limit enforcement | 24 hours |
+| Hashed IP address | Rate-limit enforcement | 24 hours |
 | Daily query count | 5-query free-tier quota | 24 hours |
-| Session cookie (VIP only) | Persist login | 1 day |
 
-We do **not** collect names, email addresses, IP addresses, or any personally
-identifiable information from guest visitors.
+We do **not** collect names, email addresses, raw IP addresses, or any personally
+identifiable information.
 
-## 3. No Mandatory Registration
-Guest users are identified solely by a temporary UUID stored in browser session memory.
-This identifier is discarded when the browser session ends.
+## 3. Third-Party Platforms
+Story media is fetched in real time from Instagram and TikTok public CDNs.
+We act only as a pass-through proxy — no media is stored on our servers.
 
-## 4. Cookies
-One functional cookie (`followspyv_auth`) is used exclusively for opted-in VIP users.
-It expires after **1 day** and is not used for advertising or cross-site tracking.
+## 4. No Mandatory Registration
+No account is required. Users are identified only by a hashed IP address used
+solely for rate-limit enforcement. The hash cannot be reversed to an IP address.
+
+## 5. Cookies
+This Service does not set any tracking or advertising cookies.
 """,
     },
 
@@ -129,8 +132,8 @@ It expires after **1 day** and is not used for advertising or cross-site trackin
         "hero_info": "Chọn nền tảng bên dưới, nhập tên người dùng công khai và xem story ngay.",
 
         # Platform tabs
-        "tab_instagram": "📸 Instagram",
-        "tab_tiktok": "🎵 TikTok",
+        "tab_instagram": "Instagram",
+        "tab_tiktok": "TikTok",
 
         # TikTok search form
         "tt_input_label": "Tên người dùng TikTok",
@@ -183,16 +186,17 @@ It expires after **1 day** and is not used for advertising or cross-site trackin
         "terms_updated": "Cập nhật lần cuối: Tháng 6 năm 2026",
         "terms_body": """
 ## 1. Bản chất của dịch vụ
-**Xem Story IG** là công cụ giáo dục độc lập, hoạt động như một proxy minh bạch cho
-nội dung story Instagram công khai. Dịch vụ **không** lưu trữ, sao chép, phân phối lại
-hoặc kiếm tiền từ bất kỳ nội dung có bản quyền nào.
+**Xem Story Ẩn Danh** là công cụ giáo dục độc lập, hoạt động như một proxy minh bạch cho
+nội dung story Instagram và TikTok công khai. Dịch vụ **không** lưu trữ, sao chép,
+phân phối lại hoặc kiếm tiền từ bất kỳ nội dung có bản quyền nào.
 
-## 2. Không liên kết với Meta hoặc Instagram
+## 2. Không liên kết với các nền tảng
 Công cụ này hoàn toàn không có liên kết với Meta Platforms, Inc., Instagram, ByteDance,
-TikTok hoặc bất kỳ công ty con nào của họ.
+TikTok hoặc bất kỳ công ty con nào của họ. Mọi nhãn hiệu thuộc về chủ sở hữu tương ứng.
 
 ## 3. Sử dụng hợp lệ
-Bạn đồng ý chỉ sử dụng dịch vụ để xem các tài khoản Instagram **công khai**. Bạn **không** được:
+Bạn đồng ý chỉ sử dụng dịch vụ để xem các tài khoản Instagram và TikTok **công khai**.
+Bạn **không** được:
 - Cố gắng truy cập tài khoản riêng tư, bị hạn chế hoặc tài khoản trẻ vị thành niên.
 - Sử dụng dịch vụ cho mục đích giám sát thương mại, theo dõi hoặc quấy rối.
 - Vượt qua hệ thống giới hạn tốc độ bằng bot hoặc công cụ tự động.
@@ -212,20 +216,22 @@ Chúng tôi chỉ thu thập dữ liệu tối thiểu cần thiết để vận
 ## 2. Dữ liệu chúng tôi thu thập
 | Dữ liệu | Mục đích | Thời gian lưu |
 |---|---|---|
-| UUID phiên ẩn danh | Giới hạn tốc độ | 24 giờ |
+| Địa chỉ IP đã mã hoá | Giới hạn tốc độ | 24 giờ |
 | Số lượt truy vấn mỗi ngày | Hạn mức 5 lượt miễn phí | 24 giờ |
-| Cookie phiên (chỉ VIP) | Duy trì đăng nhập | 1 ngày |
 
-Chúng tôi **không** thu thập tên, địa chỉ email, địa chỉ IP hoặc bất kỳ thông tin
-nhận dạng cá nhân nào từ khách truy cập.
+Chúng tôi **không** thu thập tên, địa chỉ email, địa chỉ IP gốc hoặc bất kỳ thông tin
+nhận dạng cá nhân nào.
 
-## 3. Không bắt buộc đăng ký
-Khách truy cập được nhận dạng bằng UUID tạm thời được lưu trong bộ nhớ phiên trình duyệt.
-Thông tin này bị xóa khi phiên trình duyệt kết thúc.
+## 3. Nền tảng bên thứ ba
+Nội dung story được tải trực tiếp từ CDN công khai của Instagram và TikTok.
+Chúng tôi chỉ hoạt động như một proxy trung gian — không lưu trữ bất kỳ media nào.
 
-## 4. Cookie
-Một cookie chức năng (`followspyv_auth`) chỉ được sử dụng cho người dùng VIP.
-Cookie hết hạn sau **1 ngày** và không được dùng cho quảng cáo hay theo dõi.
+## 4. Không bắt buộc đăng ký
+Không cần tài khoản. Người dùng được nhận dạng bằng địa chỉ IP đã mã hoá SHA-256,
+chỉ dùng để giới hạn tốc độ. Mã hash không thể giải mã ngược thành IP gốc.
+
+## 5. Cookie
+Dịch vụ này không sử dụng cookie theo dõi hay quảng cáo.
 """,
     },
 }
